@@ -1,0 +1,234 @@
+<div class="container main-page">
+   {{>dashbord_menu  }}
+
+   <div class="card mt-3">
+      <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+               <img src="/images/{{video.thumbnail}}" width="100%"/> 
+            </div>
+            <div class="col-sm-12 col-md-10">
+               <p><b>Title : </b>{{video.title}}</p>
+               <p><b>Description : </b>{{video.description}}</p>
+               <p><b>Price : </b>{{video.price}}</p>
+            </div>
+        </div>
+      </div>
+   </div>
+   <div class="card mt-3">
+      <div class="card-header">
+         <div class="d-flex justify-content-between">
+            <h5>Video List</h5>
+         </div>
+      </div>
+      <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Sub title</th>
+                        <th>Order</th>
+                        <th>Label</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Sub title</th>
+                        <th>Order</th>
+                        <th>Label</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </tfoot>
+                <tbody>
+                   {{#each vlist }}
+                    
+                    <tr>
+                        <td>
+                            {{ this.sub_title }}
+                        </td>
+                        <td>{{ this.order_number }}</td>
+                        <td>{{ this.label }}</td>
+                        <td>{{ this.views }}</td>
+                        <td>
+                            <button video-id="{{ this.id}}" class="btn btn-success edit-post">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <span> </span>
+                            <button video-id="{{ this.id}}" class="btn btn-danger delete-video">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                   {{/each }}
+
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+   </div>
+   <div id="#addvideo"></div>
+   <div class="card mt-3">
+        <div class="card-header">
+            <h5 id="form-head">Add Video</h5>
+        </div>
+        <div class="card-body">
+            <form action="" method="post" encType="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-12 col-md-9">
+                        <div class="form-group">
+                        <label for="sub_title">Sub Title</label>
+                        <input type="text" name="sub_title" class="form-control" required="true" placeholder="title of the video">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                        <label for="order_number">Order</label>
+                        <input type="number" name="order_number" class="form-control" required="true" placeholder="course price">
+                    </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="title">Video</label>
+                        <input type="file" name="videofile" accept="video/*" onchange="loadFile(event)" class="form-control">
+                    </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label for="label">Label</label>
+                        <select class="form-control" name="label">
+                            <option value="leason">Leason</option>
+                            <option value="Epsode">Epsode</option>
+                            <option value="Season">Season</option>
+                            <option value="Tutorial">Tutorial</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-secondary" value="Create"/>
+                <span class="ml-3"></span>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+    <div class="modal fade auto-off " id="demoModal" tabindex="-1" role="dialog" aria-labelledby="demoModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="container-fluid">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 id="form-head">Update video on List</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="video-form" action="" method="post" encType="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                        <label for="sub_title">Sub title</label>
+                                        <input type="text" id="sub_title" name="sub_title" class="form-control" required="true" placeholder="title of the couse">
+                                        <input type="hidden" name="video_id" id="video_id" >
+                                        <input type="hidden" name="course_id" id="course_id" >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                        <label for="order_number">Order</label>
+                                        <input type="number" name="order_number" id="order_number" class="form-control" required="true" placeholder="course price">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label for="label">Label</label>
+                                        <select class="form-control" name="label" id="label">
+                                            <option value="leason">Leason</option>
+                                            <option value="Epsode">Epsode</option>
+                                            <option value="Season">Season</option>
+                                            <option value="Tutorial">Tutorial</option>
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <input id="submit" type="submit" class="btn btn-secondary" value="Create"/>
+                                <span class="ml-3"></span>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                    Cancel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+<!-- Modal Ends -->
+
+<script>
+    ///delete post
+    $(document).on('click', '.delete-video', function() {
+    const id = $(this).attr('video-id');
+       
+        $.ajax({
+        url: '/delete-video-list',
+        method: 'POST',
+        data: {
+            id:id
+        }
+    })
+    .then((response) =>{
+        if(response == 'success'){
+            alert('deleted succefull')
+        }else{
+            console.log(response)
+        }
+      
+    })
+    .catch(error => {
+        console.log(error)
+    })
+    })
+
+    $(document).on('click', '.edit-post', function() {
+    const id = $(this).attr('video-id');
+       
+        $.ajax({
+        url: '/get-edit-video-list',
+        method: 'POST',
+        data: {
+            id:id
+        }
+    })
+    .then((response) =>{
+        $('#sub_title').val(response[0].sub_title)
+        $('#order_number').val(response[0].order_number)
+        $('#label').val(response[0].label)
+        $('#video_id').val(response[0].id)
+        $('#course_id').val(response[0].course_id)
+       
+        $('#video-form').attr('action','/update/video-list')
+
+        $('#submit').val('Update')
+        //$('#form-head').innerHTML("Update Video")
+
+        $('#demoModal').modal('show')
+        console.log('good');
+    })
+    .catch((response) =>{
+        console.log('error')
+    });
+
+    });
+
+</script>

@@ -1,0 +1,41 @@
+<div class="container row main-body">
+    <div class="col-sm-12 col-md-3"></div>
+    <div class="col-sm-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Register</h4>
+            </div>
+            <div class="card-body">
+                {{#if alert}}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{alert}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {{/if}}
+                <form action="/register" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input class="form-control" value="{{this.username}}" type="text" name="username"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Phone number</label>
+                        <input class="form-control" value="{{this.phone_number}}" type="text" name="phone_number"/>
+                    </div>    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input class="form-control" value="{{this.password}}" type="password" name="password"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Confirm Password</label>
+                        <input class="form-control" value="" type="password" name="conf_password"/>
+                    </div>
+                    <div class="d-flex form-group mt-2 justify-content-between">
+                        <input class="btn btn-secondary" type="submit" value="Sign Up"/>
+                        <a href="/login">Log in</a>
+                    </div>
+                </form> 
+            </div>
+        </div>                 
+    </div>
+    <div class="col-sm-12 col-md-3"></div>          
+</div>

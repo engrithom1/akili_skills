@@ -1,0 +1,195 @@
+<div class="container main-page">
+   {{>dashbord_menu  }}
+
+   <div class="card mt-3">
+      <div class="card-header">
+         <div class="d-flex justify-content-between">
+            <h5>Videos Courses</h5>
+            <button class="btn btn-secondary" data-toggle="modal" data-target="#demoModal">add course</button>
+         </div>
+      </div>
+      <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>Creator</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>Creator</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </tfoot>
+                <tbody>
+                   {{#each videos }}
+                    
+                    <tr>
+                        <td>
+                            {{ this.title }}
+                        </td>
+                        <td>{{ this.price }}</td>
+                        <td>{{ this.views }}</td>
+                        <td>{{ this.status }}</td>
+                        <td>bob rich</td>
+                        <td>
+                            <button post-id="{{ this.id}}" class="btn btn-success edit-post">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <a href="/account/video-list/{{this.id}}" class="btn btn-info">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <span> </span>
+                            <button post-id="{{ this.id}}" class="btn btn-danger delete-post">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                   {{/each }}
+
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+   </div>
+</div>
+
+<!-- Modal -->
+    <div class="modal fade auto-off " id="demoModal" tabindex="-1" role="dialog" aria-labelledby="demoModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                <div class="container-fluid">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 id="form-head">create form</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="video-form" action="" method="post" encType="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" id="title" name="title" class="form-control" required="true" placeholder="title of the couse">
+                                <input type="hidden" id="post_id" name="post_id">
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Description</label>
+                                <textarea type="text" rows="3" name="description" id="description" class="form-control" required="true" placeholder="brief about couse"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="title">Prices</label>
+                                    <input type="number" name="price" id="price" class="form-control" required="true" placeholder="course price">
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="title">Thumbnail</label>
+                                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" onchange="loadFile(event)" class="form-control">
+                                </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                <img src="" id="output" class="img img-fluid" alt="">
+                                </div>
+                            </div>
+                            <input id="submit" type="submit" class="btn btn-secondary" value="Create"/>
+                            <span class="ml-3"></span>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">
+                                Cancel
+                            </button>
+                        </form>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+<!-- Modal Ends -->
+
+<script>
+///delete post
+    $(document).on('click', '.delete-post', function() {
+    const id = $(this).attr('post-id');
+       
+        $.ajax({
+        url: '/delete-video',
+        method: 'POST',
+        data: {
+            id:id
+        }
+    })
+    .then((response) =>{
+        if(response == 'success'){
+            alert('deleted succefull')
+        }else{
+            console.log(response)
+        }
+      
+    })
+    .catch(error => {
+        console.log(error)
+    })
+    })
+
+////get edit post
+    $(document).on('click', '.edit-post', function() {
+    const id = $(this).attr('post-id');
+       
+        $.ajax({
+        url: '/get-edit-video',
+        method: 'POST',
+        data: {
+            id:id
+        }
+    })
+    .then((response) =>{
+        $('#title').val(response[0].title)
+        $('#description').val(response[0].description)
+        $('#price').val(response[0].price)
+        $('#status').val(response[0].status)
+        $('#post_id').val(response[0].id)
+        $('#output').attr('src','/images/'+response[0].thumbnail)
+        $('#video-form').attr('action','/update/video')
+
+        $('#submit').val('Update')
+        //$('#form-head').innerHTML("Update Video")
+
+        $('#demoModal').modal('show')
+        console.log('good');
+    })
+    .catch((error) =>{
+        console.log(error)
+    });
+
+    });
+
+    var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+
+</script>

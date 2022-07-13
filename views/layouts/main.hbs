@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="">
+
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="/css/templatemo-edu-meeting.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/{{style}}">
+   <script src="/js/jquery.min.js" type="text/javascript"></script>
+  <style>
+    nav {
+      padding: 0px;
+    }
+
+    nav a {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    nav a.a-exact-active {
+        color: #42b983;
+    }
+  </style>
+  <title>
+    {{ title }}
+  </title>
+</head>
+
+<body>
+ 
+  <!--=============== HEADER ===============-->
+        <header class="header" id="header">
+            <nav class="nav container">
+                <!--img src="/assets/img/perfil.png" alt="" class="logo__img"-->
+                <a href="/" class="nav__logo">Akili Skills</a>
+
+                <div class="nav__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        <li class="nav__item">
+                            <a href="/" class="nav__link">
+                                <i class='fa fa-home nav__icon'></i>
+                                <span class="nav__name">Home</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/audio-courses" class="nav__link">
+                                <i class='fa fa-headphones nav__icon'></i>
+                                <span class="nav__name">Audios</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/book-courses" class="nav__link">
+                                <i class='fa fa-book nav__icon'></i>
+                                <span class="nav__name">Books</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/video-courses" class="nav__link">
+                                <i class='fa fa-film nav__icon'></i>
+                                <span class="nav__name">Videos</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/account" class="nav__link">
+                                <i class='fa fa-user-circle nav__icon'></i>
+                                <span class="nav__name">Account</span>
+                            </a>
+                        </li>
+
+                       
+                    </ul>
+                </div>
+
+                <div class="desk__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        <li class="nav__item">
+                            <a href="/" class="nav__link">
+                                <span class="nav__name">Home</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/audio-courses" class="nav__link">
+                                <span class="nav__name">Audios</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/book-courses" class="nav__link">
+                                <span class="nav__name">Books</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/video-courses" class="nav__link">
+                                <span class="nav__name">Videos</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/qna" class="nav__link">
+                                <span class="nav__name">Q&A</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/discussion" class="nav__link">
+                                <span class="nav__name">Discussion</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="/account" class="nav__link">
+                                <span class="nav__name">Account</span>  
+                            </a>
+                        </li>
+
+                       
+                    </ul>
+                </div>
+                
+                <ul class="mob_menu nav__list">
+                    <li class="mob_item nav__item">
+                        <a href="/qna" class="nav__link">
+                            <span class="mob__name">Q&A</span>
+                        </a>
+                    </li>
+
+                    <li class="mob_item nav__item">
+                        <a href="/discussion" class="nav__link">
+                            <span class="mob__name">Discussion</span>
+                        </a>
+                    </li>
+                </ul>        
+
+                <!--img src="/assets/img/perfil.png" alt="" class="nav__img"-->
+            </nav>
+        </header>
+        
+        <main class="">
+            <!--=============== HOME ===============-->
+            {{{body}}}
+        </main>
+
+
+  <!-- built files will be auhref injected -->
+  <!--script src="js/script.js"></script-->
+ 
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+
+</html>

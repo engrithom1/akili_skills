@@ -1,0 +1,212 @@
+/*book partials css*/
+.card-book {
+    margin-bottom: 10px;
+    border-radius: 20px !important;
+}
+
+.book-img {
+    border-radius: 20px;
+}
+
+/*audio partials css*/
+.card1 {
+    background-color: #fff;
+    border-radius: 15px;
+    height: auto;
+    /*border:2px solid #919ba9;*/
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 24px 4px;
+    padding: 10px;
+}
+
+.card1:hover .btn-submit {
+    background-color: #42b983;
+}
+
+.card1:hover {
+    box-shadow: rgb(0 0 0 / 20%) 4px 2px 24px 4px;
+}
+
+.first {
+    color: #a4adb8;
+    background-color: #f1884d;
+    width: 100%;
+}
+
+.text1 {
+    color: #142948;
+    font-weight: 500;
+}
+
+.btn-submit {
+    border-radius: 50px;
+    border: none;
+    height: 35px;
+    width: 120px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #142948;
+
+}
+
+.text2 {
+    color: #000;
+    font-weight: 700;
+}
+
+.text-price {
+    color: #42b983;
+    font-weight: 700;
+}
+
+.user__img {
+    width: 32px;
+    border-radius: 50%;
+}
+
+/*video partial*/
+.meeting-item .down-content {
+    padding: 10px;
+}
+
+.meeting-item {
+    background-color: #fff;
+    border-radius: 22px;
+    height: auto;
+    /*border:2px solid #919ba9;*/
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 24px 4px;
+    padding: 10px;
+}
+
+.meeting-item:hover {
+    box-shadow: rgb(0 0 0 / 20%) 4px 2px 24px 4px;
+}
+
+/*other*/
+.container-space {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.img-side {
+    width: 25%;
+    height: auto;
+}
+
+.content-side {
+    padding-left: 10px;
+    width: 100%;
+}
+
+.feed-thumb {
+    border-radius: 10px;
+}
+
+.feed-title {
+    color: #142948;
+    font-weight: 500;
+    font-size: 18px;
+    text-align: left;
+}
+
+.book-title {
+    color: #142948;
+    font-weight: 600;
+    font-size: 17px;
+    text-align: left;
+}
+
+.book-img-side {
+    width: 50%;
+    height: auto;
+}
+
+.book-info-side {
+    padding-left: 10px;
+    width: 100%;
+    text-align: left;
+}
+
+.book-info-side p {
+    color: #142948;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: left;
+}
+
+.book-heart {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px;
+    font-size: 25px;
+    color: #142948;
+}
+
+.video-heart {
+    padding: 5px;
+    font-size: 25px;
+    color: #142948;
+}
+
+
+.qa-title {
+    color: #142948;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.qa-body {
+    color: #142948;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.ask-btn {
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    padding: 5px;
+    font-size: 15px;
+    background-color: #42b983;
+    color: #fff;
+    border-radius: 50%;
+    border: transparent;
+
+}
+
+.qa-label {
+    font-family: 'DancingScript';
+    font-size: 18px;
+
+}
+
+.divider {
+    background-color: #42b983;
+}
+
+.btn-default {
+    border: 1px solid #42b983;
+}
+
+.bottom-icons {
+    color: #626466;
+}
+
+/*////fomobileeeee*/
+
+@media only screen and (max-width: 767px) {
+    .feed-title {
+        color: #142948;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .ask-btn {
+        top: 100px;
+        right: 0px;
+    }
+}
