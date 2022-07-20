@@ -1,7 +1,63 @@
 const pool = require('../config/dbconfig')
 var data = require('../data')
 
+var richFunctions = require('../richardFunctions')
+
 var userInfo = data.userInfo
+
+///user pages functions
+exports.singleAudio = (req, res) => {
+
+  if (req.session.user && req.cookies.user_sid) {
+    userInfo.isLoged = req.session.user.isLoged
+    userInfo.user = req.session.user.user
+  }
+
+  var slug = req.params.slug
+
+  var post_id = richFunctions.getIdFromSlug(slug)
+  //connect to DB
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+
+    //query
+    var query = "SELECT vc.id, us.username, us.avator, us.id AS user_id, vc.title, vc.slug, vc.thumbnail, vc.price FROM audio_courses AS vc INNER JOIN users AS us ON vc.created_by = us.id  WHERE vc.status = 'active' ORDER BY vc.views ASC LIMIT 4;"
+    query += 'SELECT * FROM audio_lists WHERE course_id = ? ORDER BY order_number ASC;'
+    query += 'SELECT * FROM audio_courses WHERE id = ?;'
+    query += 'SELECT cm.comment, cm.likes, cm.id AS comment_id,  us.username, us.avator, cm.user_id AS comment_by FROM comments AS cm INNER JOIN users AS us ON cm.user_id = us.id WHERE cm.post_id = ? AND cm.type = ? ORDER BY cm.id DESC;'
+
+    connection.query(query, [post_id,post_id,post_id,'audio'], (err, results, fields) => {
+      
+      var course = results[2][0];
+      var audios = results[0];
+      var audio_list = results[1];
+      var comments = results[3];
+
+      ////seo datas
+      var title = course.title
+      var description = course.description
+          description.substr(0, 200)
+      var slug = course.slug
+      
+      var views = course.views
+      views = parseInt(views) + 1
+
+      if (!err) {
+        connection.query("UPDATE audio_courses SET views = ? WHERE id = ?",[views,post_id],(err,rows)=>{
+           if(!err){
+              res.render('single/audio', {userInfo: userInfo, comments, audios, audio_list, course, style: "for_partials.css", title,description,slug });
+           }
+        })
+        
+      } else {
+        console.log(err);
+      }
+
+      //console.log('the data: \n',rows);
+    })
+  })
+}
+
 ////constroller functions
 exports.accountAudio = (req, res)=>{
   
@@ -57,12 +113,18 @@ exports.createAudio = (req, res)=>{
     let imageFile
     let uploadPath
 
+    var user_id = req.session.user.user.id;
+
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
 
     imageFile = req.files.thumbnail;
-    var filename = 'audio'+time.getTime()+imageFile.name;
+
+    var name = imageFile.name
+    var nameArry = name.split(".")
+    var ext = nameArry[nameArry.length - 1]
+    var filename = "audio"+time.getTime() +'.'+ext;
     //console.log(imageFile)
     uploadPath = '/skillapp/uploads/images/' + filename;
 
@@ -74,12 +136,22 @@ exports.createAudio = (req, res)=>{
       if (err) throw err; // not connected
       console.log('Connected!');
 
-      connection.query('INSERT INTO audio_courses SET title = ?, status = ? , description = ? , price = ?, thumbnail = ?, created_by = ?',[title, status, description, price, filename, 1], (err, rows) => {
+      connection.query('INSERT INTO audio_courses SET title = ?, status = ? , description = ? , price = ?, thumbnail = ?, created_by = ?',[title, status, description, price, filename, user_id], (err, rows) => {
         // Once done, release connection
         //connection.release();
 
         if (!err) {
-          res.redirect('/account/audio');
+          var id = rows.insertId
+          var slug = richFunctions.getSlug(title,id,60)
+
+          connection.query("UPDATE audio_courses SET slug = ? WHERE id = ?",[slug, id], (err,rows)=>{
+              if(!err){
+                res.redirect('/account/audio');
+              }else{
+                console.log(err);
+              }
+          })
+          
         } else {
           console.log("errors---------------------------------------");  
           console.log(err);
@@ -99,6 +171,9 @@ exports.updateAudio = (req, res)=>{
     var time = new Date()
     let imageFile
     let uploadPath
+    var user_id = req.session.user.user.id;
+
+    var slug = richFunctions.getSlug(title,post_id,60)
 
     if (!req.files || Object.keys(req.files).length === 0) {
 
@@ -106,7 +181,7 @@ exports.updateAudio = (req, res)=>{
             if (err) throw err; // not connected
             console.log('Connected!');
       
-            connection.query('UPDATE audio_courses SET title = ? , status = ? , description = ? , price = ?, created_by = ? WHERE id = ?',[title, status, description, price, 1, post_id], (err, rows) => {
+            connection.query('UPDATE audio_courses SET title = ? , status = ? , description = ? , price = ?, created_by = ?, slug = ? WHERE id = ?',[title, status, description, price, user_id,slug, post_id], (err, rows) => {
               // Once done, release connection
               //connection.release();
       
@@ -123,7 +198,11 @@ exports.updateAudio = (req, res)=>{
     }else{
 
     imageFile = req.files.thumbnail;
-    var filename = 'audio'+time.getTime()+imageFile.name;
+
+    var name = imageFile.name
+    var nameArry = name.split(".")
+    var ext = nameArry[nameArry.length - 1]
+    var filename = "audio"+time.getTime() +'.'+ext;
     //console.log(imageFile)
     uploadPath = '/skillapp/uploads/images/' + filename;
 
@@ -135,7 +214,7 @@ exports.updateAudio = (req, res)=>{
       if (err) throw err; // not connected
       console.log('Connected!');
 
-      connection.query('UPDATE audio_courses SET title = ? , description = ? , price = ?, thumbnail = ?, created_by = ? WHERE id = ?',[title, description, price, filename, 1, post_id], (err, rows) => {
+      connection.query('UPDATE audio_courses SET title = ? , description = ? , price = ?, thumbnail = ?, created_by = ?, slug = ? WHERE id = ?',[title, description, price, filename, user_id,slug, post_id], (err, rows) => {
         // Once done, release connection
         //connection.release();
 
@@ -198,20 +277,23 @@ exports.createAudiolist = (req, res)=>{
   audio_id = req.params.id
   var { sub_title, order_number, label} = req.body;
   var time = new Date()
-  let videoFile
+  let audioFile
   let uploadPath
 
   if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send('No files were uploaded.');
   }
 
-  videoFile = req.files.videofile;
-  var filename = 'audio'+time.getTime()+videoFile.name;
-  console.log(videoFile)
+  audioFile = req.files.videofile;
+  var name = audioFile.name
+  var nameArry = name.split(".")
+  var ext = nameArry[nameArry.length - 1]
+  var filename = "video"+time.getTime() +'.'+ext;
+  
   uploadPath = '/skillapp/uploads/audios/' + filename;
 
     // Use mv() to place file on the server
-  videoFile.mv(uploadPath, function (err) {
+  audioFile.mv(uploadPath, function (err) {
   if (err) return res.status(500).send(err);
 
   pool.getConnection((err, connection) => {

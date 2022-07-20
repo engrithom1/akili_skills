@@ -1,14 +1,15 @@
+
 <div class="card1  mt-3 p-3 d-flex justify-content-between">
     <div class="img-side">
-        <img src="img/perfil.png" alt="" class="feed-thumb"/>
+        <a href="/feed/{{this.slug}}"><img src="/images/{{this.thumbnail}}" alt="" height="100%" class="feed-thumb"/></a>
     </div>
     <div class="content-side">
         <div class="d-flex justify-content-between">
-            <small>Rosh Richard</small>
-            <small>23-07-2022</small>
+            <small>{{ this.username }}</small>
+            <small>12/ 07/ 2012</small>
         </div>
         <div class="">
-            <p class="feed-title">{{ this.name }}</p>
+            <a href="/feed/{{this.slug}}"><p class="feed-title">{{ this.title }}</p></a>
         </div>
     </div>
 </div>

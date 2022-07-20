@@ -28,6 +28,6 @@ const course = {
 
 }
 
-var userInfo = {isLoged:false,user:{username:'hajurikani'}}
+var userInfo = {isLoged:false,user:{}}
 
 module.exports = {projects, course, userInfo }

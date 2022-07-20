@@ -1,0 +1,347 @@
+<style>
+    .content-section {
+        background-color: #fff;
+        border-radius: 22px;
+        height: auto;
+        /*border:2px solid #919ba9;*/
+        box-shadow: rgb(0 0 0 / 20%) 4px 2px 24px 4px;
+        padding: 20px;
+    }
+
+    .content-bottom {
+        justify-content: left !important;
+        margin: 10px 0;
+    }
+
+    .play-list {
+        display: flex;
+        box-shadow: rgb(0 0 0 / 10%) 0px 0px 24px 0px;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .play-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #fff;
+        box-shadow: rgb(0 0 0 / 30%) 0px 0px 24px 0px;
+        border-radius: 50%;
+        color: #42b983;
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    .play-list:hover .play-icon {
+        color: #fff;
+        background-color: #42b983;
+    }
+
+    .play-icon .fa-play {
+        margin-left: 20px;
+    }
+
+    .labels {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .item-info {
+        width: 90%;
+    }
+
+    .item-title {
+        font-size: 17px;
+        font-weight: 400;
+    }
+
+    .label-title {
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    button {
+        border: 0px !important;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        position: relative;
+    }
+
+    /**comments
+  starts hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */
+
+
+    .comment {
+        width: 100%;
+    }
+
+    .btn-secondary {
+        background-color: #42b983;
+    }
+
+    .addtxt {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        font-size: 13px;
+        width: 100%;
+        font-weight: 500;
+        border-top: 0px;
+        border-bottom: 2px #42b983 solid;
+        border-left: 2px #42b983 solid;
+    }
+
+    .form-control:focus {
+        color: #000;
+        border-top: 0px;
+    }
+
+    .second {
+        width: 100%;
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 10px 10px 5px #aaaaaa;
+    }
+
+    .text1 {
+        font-size:14px;
+        font-weight: 500 !important;
+        color: #000;
+    }
+
+    .text2 {
+        font-size: 13px;
+        font-weight: 500;
+        margin-left: 6px;
+        color: #56575b;
+    }
+
+    .text3 {
+        font-size: 13px;
+        font-weight: 500;
+        margin-right: 4px;
+        color: #828386;
+    }
+
+    .text3o {
+        color:
+            #42b983;
+    }
+
+    .text4 {
+        font-size: 13px;
+        font-weight: 500;
+        color: #828386;
+    }
+
+    .text4i {
+        color: #42b983;
+    }
+
+    .text4o {
+        color: white;
+    }
+
+    .thumbup {
+        font-size: 13px;
+        font-weight: 500;
+        margin-right: 5px;
+    }
+
+    .btn-liked {
+        color: #42b983;
+        padding:0px;
+    }
+    .btn-liked:hover {
+        color: #42b983;
+        padding:0px; 
+    }
+
+    .btn-like {
+        color: #828386;
+        padding:0px;
+    }
+    .btn-like:hover {
+        color: #828386;
+        padding:0px;
+    }
+
+    /*here
+  endssssssssssssssssssssssssssssssssssssssssssssss*/
+    @media only screen and (max-width: 767px) {
+        .content-section {
+            border-radius: 8px;
+            /*border:2px solid
+  #919ba9;*/
+            box-shadow: rgb(0 0 0 / 20%) 4px 2px 24px 4px;
+            padding: 8px;
+            margin: 8px;
+        }
+
+        .item-title {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .label-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .item-info {
+            width: 80%;
+        }
+    }
+    .description{
+      font-size: 17px;
+    }
+</style>
+<div class="container main-body">
+    <div class="row">
+
+        <div class="content-section col-sm-12 col-md-8 col-lg-8">
+            <div class="content-bottom">
+                <h5 class="m-2">{{ book.title }}</h5>
+                <div class="row mt-3">
+                    <div class="col-sm-12 col-md-4">
+                        <img class="mb-3" src="/images/{{ book.thumbnail }}" alt="">
+                    </div>
+                    <div class="col-sm-12 col-md-8">
+                        <div class="ml-3">
+                        <p>Author : <b>{{ book.author }}</b></p>
+                        <p>Pages : <b>{{ book.pages }}</b></p>
+                        <p>Production Year : <b>{{ book.year }}</b></p>
+                        <p class="description m-2">{{ book.description }}</p>
+                   </div>
+                    </div>
+                </div>
+                
+                <div class="mt-5 border-left border-right">
+                  <div class="d-flex justify-content-between pt-3 pb-2">
+                      <input type="text" required="true"id="comment" name="comment" placeholder="+ Add a Comment" class="form-control addtxt" />
+                      {{# if userInfo.isLoged  }}
+                      <button post-id="{{ book.id }}" user-id="{{userInfo.user.id}}" id="comment-btn" post-type="book" class="btn btn-secondary"><i class="fa fa-send"></i></button>
+                      {{ else }}
+                      <button data-toggle="modal" data-target="#registerModal" post-id="{{ book.id }}" user-id="0" id="comment-btn" post-type="book" class="btn btn-secondary"><i class="fa fa-send"></i></button>
+                      {{/ if  }}
+                  </div>
+                  <div id="comment-list">  
+                        {{#each comments  }}
+                           {{> comment  }}
+                         {{/each  }}
+                  </div>  
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-8 col-md-4 col-lg-4">
+            <h4 class="text-center mt-2 mb-2">Popular Books</h4>
+            {{#each books}}
+            <div class="col-12">
+                {{>book }}
+            </div>
+            {{/each }}
+        </div>
+    </div>
+</div>
+
+<script>
+
+/*ajax for comments*/
+
+////get edit post
+    $(document).on('click', '.like-btn', function() {
+
+        const comment_id = $(this).attr('comment-id');
+        const user_id = $('#comment-btn').attr('user-id');
+        var likes = $(this).attr('likes');
+        const comment_by = $(this).attr('comment-by');
+
+        if(user_id != 0){
+
+          $.ajax({
+              url: '/like-comment',
+              method: 'POST',
+              data: {
+                  comment_id,comment_by
+              }
+          })
+          .then((response) =>{
+              if(response == 'like'){
+
+                likes = parseInt(likes) + 1
+                $(this).attr('likes',likes)
+                var innerBtn = "<small>Like <i class='fa fa-thumbs-o-up'> </i> "+  likes +"</small>"
+                $(this).html(innerBtn)
+              }else if(response == 'exist'){
+
+                likes = parseInt(likes) - 1
+                $(this).attr('likes',likes)
+                var innerBtn = "<small>Like <i class='fa fa-thumbs-o-up'> </i> "+  likes +"</small>"
+                $(this).html(innerBtn)
+              }else{
+                alert('server error')
+              }
+          })
+          .catch((error) =>{
+              console.log(error)
+          });
+
+          const myclass = $(this).attr('class');
+          if(myclass == 'btn btn-liked like-btn'){
+            $(this).removeClass('btn btn-liked like-btn').addClass('btn btn-like like-btn');
+          }else{
+            $(this).removeClass('btn btn-like like-btn').addClass('btn btn-liked like-btn');
+          }
+          
+        }else{
+            $('#registerModal').modal('show')
+        }
+
+        
+
+    });
+
+////get edit post
+    $(document).on('click', '#comment-btn', function() {
+
+        const post_id = $(this).attr('post-id');
+        const user_id = $(this).attr('user-id');
+        const post_type = $(this).attr('post-type');
+        const comment = $('#comment').val();
+       
+        if(comment.length != 0 && user_id != 0){
+
+          $.ajax({
+              url: '/add-comment',
+              method: 'POST',
+              data: {
+                  post_id,user_id,post_type,comment
+              }
+          })
+          .then((response) =>{
+            $('#comment-list').prepend(response);
+            $('#comment').val('');
+            //console.log(response)
+          })
+          .catch((error) =>{
+              console.log(error)
+          });
+          
+        }else{
+          if(user_id == 0){
+              alert('please log in to comment')
+          }else{
+             alert('empty comment')
+          }
+          
+        }
+
+    });
+
+</script>

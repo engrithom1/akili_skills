@@ -2,13 +2,14 @@
     <div class="second py-2 px-2">
         <span class="text1">{{this.comment}}</span>
         <div class="d-flex justify-content-between py-1 pt-2">
-            <div class="d-flex"><img class="user__img" src="/img/perfil.png" /><small class="text2">Curtis jambesi</small>
+            <div class="d-flex"><img class="user__img" src="/images/{{this.avator }}" /><small class="text2">{{ this.username}}</small>
             </div>
             <div>
-            <button class="btn btn-like like-btn">
-            <small>Like <i
-            class="fa fa-thumbs-o-up"></i>{{this.comment_id}}</small>
-            </button>
+
+                <button comment-id="{{this.comment_id}}" likes="{{this.likes}}" comment-by="{{this.comment_by}}" class="btn btn-like like-btn">
+                    <small>Like <i class="fa fa-thumbs-o-up"></i> {{this.likes}}</small>
+                </button>
+               
             </div>
         </div>
     </div>

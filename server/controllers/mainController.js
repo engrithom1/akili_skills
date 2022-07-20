@@ -4,51 +4,60 @@ var data = require('../data')
 var userInfo = data.userInfo
 //home page
 exports.home = (req, res) => {
-    console.log(req.session.user)
-    if(req.session.user){
+    //console.log(req.session.user)
+    if(req.session.user && req.cookies.user_sid){
        userInfo.isLoged = req.session.user.isLoged
        userInfo.user = req.session.user.user
     }
-     
+    var query = "SELECT vc.id, us.username, us.avator, us.id AS user_id, vc.title, vc.slug, vc.thumbnail, vc.price FROM video_courses AS vc INNER JOIN users AS us ON vc.created_by = us.id  WHERE vc.status = 'active' ORDER BY vc.views DESC LIMIT 3;"
+        query += "SELECT ac.id, us.username, us.avator, us.id AS user_id, ac.title, ac.slug, ac.thumbnail, ac.price FROM audio_courses AS ac INNER JOIN users AS us ON ac.created_by = us.id  WHERE ac.status = 'active' ORDER BY ac.views DESC LIMIT 3;"
+        query += "SELECT * FROM books WHERE status = 'active' ORDER BY views DESC LIMIT 6;" 
+        query += "SELECT us.username, fd.title, fd.thumbnail, fd.views, fd.description, fd.slug, fd.created_at FROM feeds AS fd INNER JOIN users AS us ON fd.created_by = us.id WHERE fd.status = 'active' ORDER BY views DESC LIMIT 6;"  
     //connect to DB
     pool.getConnection((err, connection) =>{
-        if(err) throw err;
-        //console.log('Connection as ID '+connection.threadId)
-
-        //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var projectz = data.projects;
-            var books = projectz.slice(0,6);
-            var audios = projectz.slice(0,3);
-            var feeds = projectz.slice(2,6);
-            var videos = projectz.slice(3,6);
+        if(err){
+            console.log(err)
+        }
+        // select videos
+        connection.query(query, (err, results, fields) => {
             if(!err){
-                console.log(userInfo)
-                res.render('home',{userInfo:userInfo, style:"for_partials.css",books,feeds, videos, audios, title:"akili skills app"});
-            }else{
-                console.log(err);
-            }
-            
-            //console.log('the data: \n',rows);
+               var videos = results[0]
+               var audios = results[1]
+               var books = results[2]
+               var feeds = results[3];
+
+               var projectz = data.projects;
+               
+               
+               res.render('home',{userInfo:userInfo, style:"for_partials.css",books,feeds, videos, audios, title:"akili skills app"});
+               
+            }else{ console.log(err)}
         })
+
+       
     })
 
-}
-exports.feedPage = (req, res) => {
     
+
+}
+
+exports.feedPage = (req, res) => {
+
+    if(req.session.user && req.cookies.user_sid){
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+     }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
         //console.log('Connection as ID '+connection.threadId)
 
         //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var feeds = data.projects;
+        connection.query("SELECT us.username, fd.title, fd.thumbnail, fd.views, fd.description, fd.slug, fd.created_at FROM feeds AS fd INNER JOIN users AS us ON fd.created_by = us.id WHERE fd.status = 'active' ORDER BY views DESC;", (err, feeds) => {
+            
             if(!err){
                 
-                res.render('feeds',{style:"for_partials.css", feeds, title:"Audio Courses for you"});
+                res.render('feeds',{userInfo:userInfo,style:"for_partials.css", feeds, title:"Audio Courses for you"});
             }else{
                 console.log(err);
             }
@@ -60,19 +69,22 @@ exports.feedPage = (req, res) => {
 }
 
 exports.qnaPage = (req, res) => {
-    
+
+    if (req.session.user && req.cookies.user_sid) {
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+      }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
         //console.log('Connection as ID '+connection.threadId)
 
         //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var qnas = data.projects;
+        connection.query("SELECT us.username, us.avator, fd.question, fd.slug, fd.views, fd.answer, fd.created_at FROM question_answers AS fd INNER JOIN users AS us ON fd.ask_by = us.id WHERE fd.status = 'active' ORDER BY views ASC LIMIT 6;", (err, qnas) => {
+            
             if(!err){
                 
-                res.render('qnas',{style:"for_partials.css", qnas, title:"Audio Courses for you"});
+                res.render('qnas',{userInfo:userInfo, style:"for_partials.css", qnas, title:"experts wisdom, Questions and answers from akiliforum.com"});
             }else{
                 console.log(err);
             }
@@ -109,19 +121,21 @@ exports.discussionPage = (req, res) => {
 
 //audio page
 exports.audioPage = (req, res) => {
-    
+    if (req.session.user && req.cookies.user_sid) {
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+      }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
         //console.log('Connection as ID '+connection.threadId)
-
+        
         //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var audios = data.projects;
+        connection.query("SELECT ac.id, us.username, us.avator, us.id AS user_id, ac.title, ac.slug, ac.thumbnail, ac.price FROM audio_courses AS ac INNER JOIN users AS us ON ac.created_by = us.id  WHERE ac.status = 'active' ORDER BY ac.views DESC;", (err, audios) => {
+           
             if(!err){
                 
-                res.render('audios',{style:"for_partials.css", audios, title:"Audio Courses for you"});
+                res.render('audios',{userInfo:userInfo, style:"for_partials.css", audios, title:"Audio Courses for you"});
             }else{
                 console.log(err);
             }
@@ -134,19 +148,21 @@ exports.audioPage = (req, res) => {
 
 //video page
 exports.videoPage = (req, res) => {
-
+    if (req.session.user && req.cookies.user_sid) {
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+      }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
         //console.log('Connection as ID '+connection.threadId)
 
         //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var videos = data.projects;
+        connection.query("SELECT vc.id, us.username, us.avator, us.id AS user_id, vc.title, vc.slug, vc.thumbnail, vc.price FROM video_courses AS vc INNER JOIN users AS us ON vc.created_by = us.id  WHERE vc.status = 'active' ORDER BY vc.views DESC;", (err, videos) => {
+           
             if(!err){
                 
-                res.render('videos',{style:"for_partials.css", videos, title:"Video Courses for you"});
+                res.render('videos',{userInfo:userInfo, style:"for_partials.css", videos, title:"Video Courses for you"});
             }else{
                 console.log(err);
             }
@@ -159,19 +175,21 @@ exports.videoPage = (req, res) => {
 
 //video page
 exports.bookPage = (req, res) => {
-
+    if (req.session.user && req.cookies.user_sid) {
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+      }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
         //console.log('Connection as ID '+connection.threadId)
 
         //query
-        connection.query('SELECT * FROM users', (err, rows) => {
-            connection.release();
-            var books = data.projects;
+        connection.query("SELECT * FROM books WHERE status = 'active' ORDER BY views DESC", (err, books) => {
+            
             if(!err){
                 
-                res.render('books',{style:"for_partials.css", books, title:"Books available for your"});
+                res.render('books',{userInfo:userInfo,style:"for_partials.css", books, title:"Books available for your"});
             }else{
                 console.log(err);
             }

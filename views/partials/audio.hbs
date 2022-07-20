@@ -1,13 +1,13 @@
 <div class="card1  mt-3 p-3">
     <div class="d-flex">
-        <small><img src="img/perfil.png" alt="" class="user__img"/> Richard Mlimila</small>
+        <small><img src="/images/{{this.avator}}" alt="" class="user__img"/> {{this.username}}</small>
     </div>
     <div class="mt-3">
-        <p class="text1 qa-title">{{ this.name }}</p>
+        <h4 class="qa-title text-center">{{ this.title }}</h4>
     </div>
     <div class="mt-3 d-flex justify-content-between p-2">
         <span class="text-price">Tsh {{ this.price }}</span>
-        <a href="/audios-course" class="btn btn-submit"><i class="fa fa-play mr-1"></i> Play Now</a>
+        <a href="/audio/{{this.slug}}" class="btn btn-submit"><i class="fa fa-play mr-1"></i> Play Now</a>
     </div>
     <button class="btn book-heart">
         <span class="fa fa-heart"></span>

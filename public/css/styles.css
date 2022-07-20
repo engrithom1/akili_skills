@@ -121,6 +121,12 @@ img {
   margin-left: 15%;
 }
 
+.nav__img__icon {
+  width: 25px;
+  border-radius: 50%;
+  margin: 0%;
+}
+
 .logo__img {
   width: 32px;
   border-radius: 50%;

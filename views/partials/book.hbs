@@ -1,20 +1,20 @@
 <div class="card1  mt-3 p-3">
     <div class="d-flex justify-content-between">
         <div class="book-img-side">
-            <a href="http://">
-                <img src="img/portfolio/thumbnails/js{{ this.id }}.jpg" alt="" class="feed-thumb"/>
+            <a href="/book/{{ this.slug }}">
+                <img src="/images/{{ this.thumbnail }}" alt="" class="feed-thumb"/>
             </a>
         </div>
         <div class="book-info-side">
-           <p>By : K . Anthon</p>
-           <p>Pages : 287</p>
-           <p>Pro Year: 2019</p>
-           <p class="book-price">Tsh 3200</p> 
+           <p>By : {{ this.author }}</p>
+           <p>Pages : {{ this.pages }}</p>
+           <p>Pro Year: {{ this.year }}</p>
+           <p class="book-price">Tsh {{ this.price }}</p> 
         </div>
     </div>
     <div class="mt-1">
-        <a href="http://">
-            <p class="book-title">{{ this.name }}</p>
+        <a href="/book/{{ this.slug }}">
+            <p class="book-title">{{ this.title }}</p>
         </a>
     </div>
     <button class="btn book-heart">

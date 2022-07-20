@@ -15,7 +15,14 @@
 </div>
 
 
-    <button class="ask-btn">
+    {{# if userInfo.isLoged  }}
+    <button data-toggle="modal" id="ask-by" user-id="{{userInfo.user.id}}" data-target="#qnaModal" class="ask-btn">
         <span class="fa fa-pencil"></span>
         <small>uliza</small>
     </button>
+    {{ else }}
+    <button data-toggle="modal" id="ask-by" user-id="0" data-target="#registerModal" class="ask-btn">
+        <span class="fa fa-pencil"></span>
+        <small>uliza</small>
+    </button>
+    {{/ if  }}

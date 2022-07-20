@@ -5,7 +5,7 @@ var richFunctions = require('../richardFunctions')
 
 var userInfo = data.userInfo
 ////constroller functions
-exports.singleFeed = (req, res) => {
+exports.singleQna = (req, res) => {
 
   if (req.session.user && req.cookies.user_sid) {
     userInfo.isLoged = req.session.user.isLoged
@@ -20,29 +20,30 @@ exports.singleFeed = (req, res) => {
     if (err) throw err;
 
     //query
-    var query = "SELECT us.username, fd.title, fd.thumbnail, fd.views, fd.description, fd.slug, fd.created_at FROM feeds AS fd INNER JOIN users AS us ON fd.created_by = us.id WHERE fd.status = 'active' ORDER BY views ASC LIMIT 6;"
-    query += 'SELECT * FROM feeds WHERE id = ?;'
-    query += 'SELECT cm.comment, cm.likes, cm.id AS comment_id,  us.username, us.avator, cm.user_id AS comment_by FROM comments AS cm INNER JOIN users AS us ON cm.user_id = us.id WHERE cm.post_id = ? AND cm.type = ? ORDER BY cm.id DESC;'
+    var query = "SELECT us.username, us.avator, fd.question, fd.slug, fd.views, fd.answer, fd.created_at FROM question_answers AS fd INNER JOIN users AS us ON fd.ask_by = us.id WHERE fd.status = 'active' ORDER BY views ASC LIMIT 6;"
+    query += "SELECT us.username, us.avator, fd.question, fd.slug, fd.views, fd.answer, fd.created_at FROM question_answers AS fd INNER JOIN users AS us ON fd.ask_by = us.id WHERE fd.id = ?;"
+    
 
-    connection.query(query, [post_id,post_id,'feed'], (err, results, fields) => {
+    connection.query(query, [post_id], (err, results, fields) => {
       
-      var feed = results[1][0];
-      var feeds = results[0];
-      var comments = results[2];
+      var qna = results[1][0];
+      var qnas = results[0];
+
+      console.log(qna)
 
       ////seo datas
-      var title = feed.title
-      var description = feed.description
+      var title = qna.question
+      var description = qna.answer
           description.substr(0, 200)
-      var slug = feed.slug
+      var slug = qna.slug
       
-      var views = feed.views
+      var views = qna.views
       views = parseInt(views) + 1
 
       if (!err) {
-        connection.query("UPDATE feeds SET views = ? WHERE id = ?",[views,post_id],(err,rows)=>{
+        connection.query("UPDATE question_answers SET views = ? WHERE id = ?",[views,post_id],(err,rows)=>{
            if(!err){
-              res.render('single/feed', {userInfo: userInfo, comments, feeds, feed, style: "for_partials.css", title,description,slug });
+              res.render('single/qna', {userInfo: userInfo, qnas, qna, style: "for_partials.css", title,description,slug });
            }
         })
         
@@ -102,47 +103,31 @@ exports.getFeedEdit = (req, res)=>{
     
 }
 
-exports.createFeed = (req, res)=>{
-    var { title, description, status} = req.body;
-    var time = new Date()
-    let imageFile
-    let uploadPath
+exports.createQna = (req, res)=>{
 
+    var { question } = req.body;
+    
     var user_id = req.session.user.user.id;
 
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
-
-    imageFile = req.files.thumbnail;
-    var name = imageFile.name
-    var nameArry = name.split(".")
-    var ext = nameArry[nameArry.length - 1]
-    var filename = "feed"+time.getTime() +'.'+ext;
-    //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
-
-      // Use mv() to place file on the server
-    imageFile.mv(uploadPath, function (err) {
-    if (err) return res.status(500).send(err);
 
     pool.getConnection((err, connection) => {
       if (err) throw err; // not connected
       console.log('Connected!');
 
-      connection.query('INSERT INTO feeds SET title = ?, status = ? , description = ?, thumbnail = ?, created_by = ?',[title, status, description, filename, user_id], (err, rows) => {
+      connection.query('INSERT INTO question_answers SET question = ?, ask_by = ?',[question, user_id], (err, rows) => {
         // Once done, release connection
         //connection.release();
 
         if (!err) {
           var id = rows.insertId
-          var slug = richFunctions.getSlug(title,id,60)
+          var slug = richFunctions.getSlug(question,id,60)
 
-          connection.query("UPDATE feeds SET slug = ? WHERE id = ?",[slug, id], (err,rows)=>{
+          connection.query("UPDATE question_answers SET slug = ? WHERE id = ?",[slug, id], (err,rows)=>{
               if(!err){
-                res.redirect('/account/feed');
+                return res.send('success')
               }else{
                 console.log(err);
+                return res.send('error')
               }
             })
         } else {
@@ -152,10 +137,6 @@ exports.createFeed = (req, res)=>{
 
       });
     });
-
-    // res.send('File uploaded!');
-  });
-
     
 }
 

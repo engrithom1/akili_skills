@@ -11,6 +11,8 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Favorites</a>
       </li>
+     {{# if userInfo.user.role  }}
+                                    
       <li class="nav-item">
         <a class="nav-link" href="/account/Audio">Audio</a>
       </li>
@@ -32,6 +34,7 @@
       <li class="nav-item">
         <a class="nav-link" href="/account/user">Users</a>
       </li>
+      {{/ if  }}
     </ul>
   </div>
 </nav>
