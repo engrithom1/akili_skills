@@ -1,20 +1,19 @@
 <div class="card1  mt-3 p-3">
     <div class="mt-2">
-        <a href="http://">
-            <p class="qa-title">{{ this.name }}</p>
+        
+            <p class="qa-title"><a href="/discussion/{{slug}}">{{ this.title }}</a></p>
         </a>
         <div class="mt-2 d-flex justify-content-between">
-            <small>12 Replies</small>
+            <small>{{ this.replies }} Replies</small>
             <small>12-05-2022</small>
         </div>
-        <a href="http://">
-            <p class="mt-2 qa-body">{{ this.name }} this is how questions and answer will look like in this app it seems to be 
-            premitive and awesome ...</p>
+        <a href="/discussion/{{slug}}">
+            <p class="mt-2 qa-body">{{ substr "200" this.description }}</p>
         </a>
         <div class="mt-2 d-flex bottom-icons">
-           <span class="fa fa-thumbs-up"> 234<small> likes</small></span>
-           <span class="ml-3 fa fa-eye"> 1,234<small> Views</small></span>
-           <span class="ml-3 fa fa-share-alt"> 234<small> Shared</small></span>
+           <span class="fa fa-thumbs-up"> {{ this.likes }}<small> likes</small></span>
+           <span class="ml-3 fa fa-eye"> {{ this.views }}<small> Views</small></span>
+           <!--span class="ml-3 fa fa-share-alt"> {{ this.shared }}<small> Shared</small></span-->
         </div>
     </div>
 </div>

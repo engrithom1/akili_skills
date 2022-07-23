@@ -79,6 +79,7 @@
 
     .comment {
         width: 100%;
+        height: auto;
     }
 
     .btn-secondary {
@@ -94,6 +95,7 @@
         border-top: 0px;
         border-bottom: 2px #42b983 solid;
         border-left: 2px #42b983 solid;
+        border-right: 2px #42b983 solid;
     }
 
     .form-control:focus {
@@ -200,42 +202,51 @@
     .description{
       font-size: 17px;
     }
+    .btn-height{
+        height:fit-content;
+        position:relative;
+        bottom:0px
+    }
 </style>
 <div class="container main-body">
     <div class="row">
 
-        <div class="content-section col-sm-12 col-md-8 col-lg-8">
-            <div class="content-bottom">
-                <h5 class="mb-4">{{ feed.title }}</h5>
-                <img src="/images/{{ feed.thumbnail }}" alt="">
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <div class="content-section content-bottom">
+                <h5 class="mb-4">{{ discussion.title }}</h5>
+                <img src="/images/{{ discussion.thumbnail }}" alt="">
 
-                <p class="description mt-4">{{ feed.description }}</p>
-                
+                <p class="description mt-4">{{ discussion.description }}</p>
+                <hr class="divider"/>
                 <div class="mt-5 border-left border-right">
+                    <label for="comment">Changia hapa</label>
                   <div class="d-flex justify-content-between pt-3 pb-2">
-                      <input type="text" required="true"id="comment" name="comment" placeholder="+ Add a Comment" class="form-control addtxt" />
+                      <textarea required="true" id="comment" name="comment" placeholder="+ add your contribution here" class="form-control addtxt" ></textarea>
                       {{# if userInfo.isLoged  }}
-                      <button post-id="{{ feed.id }}" user-id="{{userInfo.user.id}}" id="comment-btn" post-type="feed" class="btn btn-secondary"><i class="fa fa-send"></i></button>
+                      <button post-id="{{ discussion.id }}" user-id="{{userInfo.user.id}}" id="comment-btn" class="btn btn-secondary btn-height"><i class="fa fa-send"></i></button>
                       {{ else }}
-                      <button data-toggle="modal" data-target="#registerModal" post-id="{{ feed.id }}" user-id="0" id="comment-btn" post-type="feed" class="btn btn-secondary"><i class="fa fa-send"></i></button>
+                      <button data-toggle="modal" data-target="#registerModal" post-id="{{ discussion.id }}" user-id="0" id="comment-btn" post-type="discussion" class="btn btn-secondary btn-height"><i class="fa fa-send"></i></button>
                       {{/ if  }}
                   </div>
                   <div id="comment-list">  
-                        {{#each comments  }}
-                           {{> comment  }}
+                        {{#each replies  }}
+                           {{> reply  }}
                          {{/each  }}
                   </div>  
                 </div>
 
             </div>
+            <div class="mt-3">
+                <h4 class="text-center mt-5 mb-2">Popular Discussion/Topics</h4>
+                {{#each discussions}}
+                <div class="col-12">
+                    {{>discussion }}
+                </div>
+                {{/each }}
+            </div>
         </div>
         <div class="col-sm-8 col-md-4 col-lg-4">
-            <h4 class="text-center mt-2 mb-2">Popular Books</h4>
-            {{#each feeds}}
-            <div class="col-12">
-                {{>feed }}
-            </div>
-            {{/each }}
+           
         </div>
     </div>
 </div>
@@ -298,21 +309,20 @@
 
     });
 
-////get edit post
+////add replies here
     $(document).on('click', '#comment-btn', function() {
 
         const post_id = $(this).attr('post-id');
         const user_id = $(this).attr('user-id');
-        const post_type = $(this).attr('post-type');
         const comment = $('#comment').val();
        
         if(comment.length != 0 && user_id != 0){
 
           $.ajax({
-              url: '/add-comment',
+              url: '/add-reply',
               method: 'POST',
               data: {
-                  post_id,user_id,post_type,comment
+                  post_id,user_id,comment
               }
           })
           .then((response) =>{

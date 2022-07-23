@@ -112,3 +112,57 @@ exports.allInOneComment = (req, res)=>{
     });
     
 }
+
+exports.discussionReply = (req, res)=>{
+
+  var post_id = req.body.post_id
+  var comment = req.body.comment
+  var user_id = req.session.user.user.id
+
+  //console.log(req.session.user)
+var query = "SELECT rp.reply, rp.likes, rp.id AS reply_id,  us.username, us.avator, rp.user_id AS reply_by FROM replies AS rp INNER JOIN users AS us ON rp.user_id = us.id WHERE rp.id = ?;"
+    query += "SELECT replies FROM discussion WHERE id = ?;"
+
+  pool.getConnection((err, connection) => {
+      if (err) throw err; // not connected
+      console.log('Connected!');
+
+      connection.query('INSERT INTO replies SET reply = ? , post_id = ? , user_id = ?',[comment, post_id, user_id], (err, rows) => {
+        // Once done, release connection
+        //connection.release();
+        if (!err) {
+          var reply_id = rows.insertId
+          connection.query(query,[reply_id, post_id], (err, rows) => {
+             if(!err){
+              console.log(rows)
+              var replies = rows[0][0]
+              var reps = rows[1][0].replies
+              var reps = reps + 1
+
+              //console.log(commentz)
+              var reply = replies.reply
+              var likes = replies.likes
+              var reply_id = replies.reply_id
+              var reply_by = replies.reply_by
+              var avator = replies.avator
+              var username = replies.username
+
+              connection.query("UPDATE discussion SET replies = ? WHERE id = ?",[reps,post_id],(err,rows)=>{
+                if(!err){
+                  return res.render('partials/reply',{layout:false,reply,likes,reply_by,reply_id,avator,username})
+                }
+              })
+             }else{
+              console.log(err);
+             }
+          })
+          
+        } else {
+          console.log("get video errors---------------------------------------");  
+          console.log(err);
+        }
+
+      });
+  });
+  
+}

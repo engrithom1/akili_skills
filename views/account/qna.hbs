@@ -1,0 +1,135 @@
+<style>
+    .bg-answered{
+        background-color: #f2f6fc;
+    }
+</style>
+
+<div class="container main-page">
+   {{>dashbord_menu  }}
+
+   <div class="card mt-3">
+      <div class="card-header">
+         <div class="d-flex justify-content-between">
+            <h5>Questions and answers</h5>
+         </div>
+      </div>
+      <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Qestion</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>Asked By</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Qestion</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>Asked By</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </tfoot>
+                <tbody>
+                   {{#each qnas }}
+                    
+                        {{# if answer_by  }}
+                        <tr class="bg-answered">
+                        <td>
+                            {{ this.question }}
+                        </td>
+                        <td>{{ this.views }}</td>
+                        <td>{{ this.status }}</td>
+                        <td>{{ this.askedby }}</td>
+                        <td>
+                            
+                            {{# if answer_by  }}
+                            <a href="/account/qna-edit/{{this.id}}" class="btn btn-info">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            {{ else }}
+                            <a href="/account/qna-edit/{{this.id}}" class="btn btn-success">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            {{/ if  }}
+                            
+                            <span> </span>
+                            <button feed-id="{{ this.id}}" class="btn btn-danger delete-post">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                        </tr>
+                        {{ else }}
+                        <tr>
+                        <td>
+                            {{ this.question }}
+                        </td>
+                        <td>{{ this.views }}</td>
+                        <td>{{ this.status }}</td>
+                        <td>{{ this.askedby }}</td>
+                        <td>
+                            
+                            {{# if answer_by  }}
+                            <a href="/account/qna-edit/{{this.id}}" class="btn btn-info">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            {{ else }}
+                            <a href="/account/qna-edit/{{this.id}}" class="btn btn-success">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            {{/ if  }}
+                            
+                            <span> </span>
+                            <button feed-id="{{ this.id}}" class="btn btn-danger delete-post">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                        </tr>
+                        {{/ if  }}
+                    
+                   {{/each }}
+
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+   </div>
+</div>
+
+<script>
+///delete post
+    $(document).on('click', '.delete-post', function() {
+    const id = $(this).attr('qna-id');
+       
+        $.ajax({
+        url: '/delete-feed',
+        method: 'POST',
+        data: {
+            id:id
+        }
+    })
+    .then((response) =>{
+        if(response == 'success'){
+            alert('deleted succefull')
+        }else{
+            console.log(response)
+        }
+      
+    })
+    .catch(error => {
+        console.log(error)
+    })
+    })
+
+    
+
+</script>

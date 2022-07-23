@@ -1,0 +1,71 @@
+<style>
+  .sibitisha-hiden{
+    visibility: hidden;
+  }
+  .sibitisha-show{
+    visibility:visible;
+  }
+</style>
+
+<div class="container main-body">
+    <h2 class="text-center">Pay for This</h2>
+    <div class="row">
+       <div class="col-sm-6 col-md-4 col-12">
+        
+       </div>
+       <div class="col-sm-6 col-md-4 col-12">
+        <h5>Pay Tsh 2500 for this content</h5>
+        <input class="form-control" type="text" name="phone" id="phone" placeholder="enter phone number">
+        <button id="pay-now" user-id="23" class="btn btn-secondary mt-3">Pay Now</button>
+        <div id="sibitisha-info" class="sibitisha-hiden">
+          <p>Ruhusu malipo kwenye simu yako kisha sibitisha</p>
+          <button id="pay-now" user-id="23" class="btn btn-success mt-3">Sibitisha</button>
+        </div>
+       </div>
+       <div class="col-sm-6 col-md-4 col-12">
+        
+       </div>
+   </div>
+</div>
+
+<script>
+    ////get edit post
+    $(document).on('click', '#pay-now', function() {
+
+        const username = "Richard mlimila";
+        const user_id = $(this).attr('user-id');
+        const phone_number = $('#phone').val();
+       
+        if(phone_number.length != 0 && user_id != 0){
+
+          $.ajax({
+              url: '/payment',
+              method: 'POST',
+              data: {
+                   phone_number,username
+              }    
+          })
+          .then((response) =>{
+           
+            console.log(response)
+            if(response == 'like'){
+              $(this).attr('class','sibitisha-hiden')
+              $('#sibitisha-info').attr('class','sibitisha-show')
+            }
+          })
+          .catch((error) =>{
+              console.log(error)
+          });
+          
+        }else{
+          if(user_id == 0){
+              alert('please log in to comment')
+          }else{
+             alert('empty comment')
+          }
+          
+        }
+
+    });
+
+</script>

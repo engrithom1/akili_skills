@@ -1,11 +1,13 @@
 const pool = require('../config/dbconfig')
 var data = require('../data')
 
+const axios = require('axios')
+
 var userInfo = data.userInfo
 //home page
 exports.home = (req, res) => {
-    //console.log(req.session.user)
-    if(req.session.user && req.cookies.user_sid){
+         
+    if(req.session.user){
        userInfo.isLoged = req.session.user.isLoged
        userInfo.user = req.session.user.user
     }
@@ -43,7 +45,7 @@ exports.home = (req, res) => {
 
 exports.feedPage = (req, res) => {
 
-    if(req.session.user && req.cookies.user_sid){
+    if(req.session.user){
         userInfo.isLoged = req.session.user.isLoged
         userInfo.user = req.session.user.user
      }
@@ -69,8 +71,8 @@ exports.feedPage = (req, res) => {
 }
 
 exports.qnaPage = (req, res) => {
-
-    if (req.session.user && req.cookies.user_sid) {
+       
+    if (req.session.user) {
         userInfo.isLoged = req.session.user.isLoged
         userInfo.user = req.session.user.user
       }
@@ -97,18 +99,20 @@ exports.qnaPage = (req, res) => {
 
 exports.discussionPage = (req, res) => {
     
+    if (req.session.user) {
+        userInfo.isLoged = req.session.user.isLoged
+        userInfo.user = req.session.user.user
+      }
     //connect to DB
     pool.getConnection((err, connection) =>{
         if(err) throw err;
-        //console.log('Connection as ID '+connection.threadId)
 
-        //query
-        connection.query('SELECT * FROM users', (err, rows) => {
+        connection.query("SELECT * FROM discussion WHERE status = 'active' ORDER BY views DESC", (err, discussions) => {
             connection.release();
-            var discussions = data.projects;
+            
             if(!err){
                 
-                res.render('discussions',{style:"for_partials.css", discussions, title:"Audio Courses for you"});
+                res.render('discussions',{userInfo:userInfo, style:"for_partials.css", discussions, title:"Audio Courses for you"});
             }else{
                 console.log(err);
             }
@@ -121,7 +125,9 @@ exports.discussionPage = (req, res) => {
 
 //audio page
 exports.audioPage = (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
+     
+    
+    if (req.session.user) {
         userInfo.isLoged = req.session.user.isLoged
         userInfo.user = req.session.user.user
       }
@@ -148,7 +154,9 @@ exports.audioPage = (req, res) => {
 
 //video page
 exports.videoPage = (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
+     
+    
+    if (req.session.user) {
         userInfo.isLoged = req.session.user.isLoged
         userInfo.user = req.session.user.user
       }
@@ -175,7 +183,8 @@ exports.videoPage = (req, res) => {
 
 //video page
 exports.bookPage = (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
+         
+    if (req.session.user) {
         userInfo.isLoged = req.session.user.isLoged
         userInfo.user = req.session.user.user
       }
@@ -224,3 +233,4 @@ exports.accountPage = (req, res) =>{
       });
     
 }
+

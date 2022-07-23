@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-center py-2 comment">
+    <div class="second py-2 px-2">
+        
+        <div class="d-flex justify-content-between py-1 pt-2">
+            <div class="d-flex"><img class="user__img" src="/images/{{this.avator }}" /><small class="text2">{{ this.username}}</small>
+            </div>
+            <div>
+
+                <button comment-id="{{this.reply_id}}" likes="{{this.likes}}" comment-by="{{this.reply_by}}" class="btn btn-like like-btn">
+                    <small>Like <i class="fa fa-thumbs-o-up"></i> {{this.likes}}</small>
+                </button>
+               
+            </div>
+        </div>
+        <span class="text1">{{this.reply}}</span>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 const pool = require('../config/dbconfig')
 var data = require('../data')
+var path = require('path')
 
 var richFunctions = require('../richardFunctions')
 
@@ -7,7 +8,7 @@ var userInfo = data.userInfo
 ////constroller functions
 exports.singleFeed = (req, res) => {
 
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
   }
@@ -120,7 +121,8 @@ exports.createFeed = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "feed"+time.getTime() +'.'+ext;
     //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    //uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {
@@ -197,7 +199,7 @@ exports.updateFeed = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "feed"+time.getTime() +'.'+ext;
     //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {

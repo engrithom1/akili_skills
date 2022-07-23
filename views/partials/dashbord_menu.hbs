@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
-  <a class="navbar-brand" href="#">{{userInfo.user.username}}</a>
+  <a class="navbar-brand" href="#">{{substr "12" userInfo.user.username}}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -23,7 +23,7 @@
         <a class="nav-link" href="/account/book">Book</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/account/qa">Q&A</a>
+        <a class="nav-link" href="/account/qna">Q&A</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/account/discussion">Discussion</a>

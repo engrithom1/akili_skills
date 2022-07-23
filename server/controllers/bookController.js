@@ -6,7 +6,7 @@ var userInfo = data.userInfo
 
 exports.singleBook = (req, res) => {
 
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
   }
@@ -55,7 +55,7 @@ exports.singleBook = (req, res) => {
 }
 ////constroller functions
 exports.accountBook = (req, res)=>{
-  if(req.session.user && req.cookies.user_sid){
+  if(req.session.user){
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
  }
@@ -123,7 +123,8 @@ exports.createBook = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "book"+time.getTime() +'.'+ext;
 
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    //uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
     bookFile = req.files.bookpdf;
 
@@ -131,7 +132,8 @@ exports.createBook = (req, res)=>{
     var nameArry = name.split(".")
     var ext = nameArry[nameArry.length - 1]
     var bookname = "book"+time.getTime() +'.'+ext;
-    bookPath = '/skillapp/uploads/books/' + bookname;
+    //bookPath = '/skillapp/uploads/books/' + bookname;
+    bookPath = path.join(__dirname, '../../uploads/books/'+bookname);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {
@@ -211,7 +213,8 @@ exports.updateBook = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "book"+time.getTime() +'.'+ext;
     //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    //uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {

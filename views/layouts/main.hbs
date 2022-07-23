@@ -67,6 +67,8 @@
 	50% { transform: translateZ(-250px) rotateY(89deg); opacity: 1; animation-timing-function: ease-in;}
 	100% { transform: translateZ(0) rotateY(0deg); opacity: 1; }
 }
+
+
   </style>
   <title>
     {{ title }}
@@ -115,10 +117,10 @@
                                 {{# if userInfo.isLoged  }}
                                 <a href="/account" class="nav__link">
                                     <img src="/img/perfil.png" alt="" class="nav__icon nav__img__icon">
-                                    <span class="nav__name">{{userInfo.user.username}}</span>
+                                    <span class="nav__name">{{substr "7" userInfo.user.username}}</span>
                                 </a>    
                                 {{ else }}
-                                <a data-toggle="modal" data-target="#registerModal" href="#" class="nav__link">
+                                <a href="/login" class="nav__link">
                                     <i class='fa fa-user-circle nav__icon'></i>
                                     <span class="nav__name">Account</span>
                                 {{/ if  }}
@@ -171,10 +173,10 @@
                             
                                 {{# if userInfo.isLoged  }}
                                 <a href="/account" class="nav__link">
-                                    <span class="nav__name">{{userInfo.user.username}}</span>
+                                    <span class="nav__name">{{substr "7" userInfo.user.username}}</span>
                                 </a>    
                                 {{ else }}
-                                <a data-toggle="modal" data-target="#registerModal" href="#" class="nav__link">
+                                <a href="/login" class="nav__link">
                                     <span class="nav__name">Account</span>
                                 </a>    
                                 {{/ if  }}  
@@ -245,8 +247,9 @@
 
                 <div class="container-fluid">
                     <div class="card mt-3">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 id="form-head">Register</h5>
+                            <button type="button" class="btn btn-danger cancel" data-dismiss="modal" aria-label="Close">X</button>
                         </div>
                         <div class="card-body">
                             <form action="/register" method="post">
@@ -266,9 +269,8 @@
                                 <div class="d-flex form-group mt-2 justify-content-between">
                                     <div>
                                         <input id="register-path" class="btn btn-secondary" type="submit" value="Sign Up"/>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
                                     </div>
-                                    <a  data-toggle="modal" data-dismiss="modal" aria-label="Close" data-target="#loginModal" href="#">Log in</a>
+                                    <a  data-toggle="modal" data-dismiss="modal" aria-label="Close" data-target="#loginModal" href="#">Log in Hapa</a>
                                 </div>
                             </form>
                         </div>
@@ -286,8 +288,9 @@
 
                 <div class="container-fluid">
                     <div class="card mt-3">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 id="form-head">Login</h5>
+                            <button type="button" class="btn btn-danger cancel" data-dismiss="modal" aria-label="Close">X</button>
                         </div>
                         <div class="card-body">
                             <form action="/login" method="post">
@@ -303,9 +306,9 @@
                                 <div class="d-flex form-group mt-2 justify-content-between">
                                     <div>
                                         <input id="login-path" class="btn btn-secondary" type="submit" value="Sign In"/>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+                                        
                                     </div>
-                                    <a data-toggle="modal" data-dismiss="modal" aria-label="Close" data-target="#registerModal" href="#">Register</a>
+                                    <a data-toggle="modal" data-dismiss="modal" aria-label="Close" data-target="#registerModal" href="#">Register Hapa</a>
                                 </div>
                             </form>
                         </div>
@@ -320,6 +323,50 @@
         </main>
 
         <script>
+            ///ask question
+        $(document).on('click', '#submit-question', function() {
+
+       
+        const question = $('#question-text').val();
+        const user_id = $('#ask-by').attr('user-id');
+       
+        if(question.length != 0 && user_id != 0){
+
+          $.ajax({
+              url: '/add-question',
+              method: 'POST',
+              data: {
+                  user_id, question
+              }
+          })
+          .then((response) =>{
+
+            $('#qnaModal').modal('hide')
+
+            if(response == 'success'){
+                alert('Asante Swali lako limepokelea')
+            }else{
+                alert('Samahani jaribu tena badaee')
+            }
+          })
+          .catch((error) =>{
+              alert(error)
+          });
+          //alert(question+'this'+user_id)
+          
+        }else{
+          if(user_id == 0){
+              alert('please log in to comment')
+          }else{
+             alert('empty comment')
+          }
+          
+        }
+
+    });
+
+    //login
+
            $(document).on('click', '#login-path', function() {
               
               var url = new URL(document.URL)

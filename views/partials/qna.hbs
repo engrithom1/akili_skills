@@ -8,8 +8,7 @@
         <p class="qa-title">{{ this.question }}</p>
         <hr class="divider"/>
         <p class="qa-label">Answer:</p>
-        <p class="qa-body">{{ this.question }} this is how questions and answer will look like in this app it seems to be 
-            premitive and awesome ...
+        <p class="qa-body">{{substr "120" this.answer}}
         </p>
         <a href="/qna/{{ this.slug }}" class="mt-2 btn btn-default">Read More</a>
     </div>

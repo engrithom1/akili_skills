@@ -8,7 +8,7 @@ var userInfo = data.userInfo
 ///user pages functions
 exports.singleAudio = (req, res) => {
 
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
   }
@@ -126,7 +126,8 @@ exports.createAudio = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "audio"+time.getTime() +'.'+ext;
     //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    //uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {
@@ -204,7 +205,8 @@ exports.updateAudio = (req, res)=>{
     var ext = nameArry[nameArry.length - 1]
     var filename = "audio"+time.getTime() +'.'+ext;
     //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
+    //uploadPath = '/skillapp/uploads/images/' + filename;
+    uploadPath = path.join(__dirname, '../../uploads/images/'+filename);
 
       // Use mv() to place file on the server
     imageFile.mv(uploadPath, function (err) {
@@ -288,9 +290,10 @@ exports.createAudiolist = (req, res)=>{
   var name = audioFile.name
   var nameArry = name.split(".")
   var ext = nameArry[nameArry.length - 1]
-  var filename = "video"+time.getTime() +'.'+ext;
+  var filename = "audios"+time.getTime() +'.'+ext;
   
-  uploadPath = '/skillapp/uploads/audios/' + filename;
+  //uploadPath = '/skillapp/uploads/audios/' + filename;
+  uploadPath = path.join(__dirname, '../../uploads/audios/'+filename);
 
     // Use mv() to place file on the server
   audioFile.mv(uploadPath, function (err) {

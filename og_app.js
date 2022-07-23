@@ -2,7 +2,6 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var { v4:uuidv4 } = require("uuid")
 var session = require('express-session');
 const fileUpload = require('express-fileupload');
 var path = require('path')
@@ -23,51 +22,34 @@ app.use(bodyParser.json());
 
 //declare static file
 app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, '/uploads')));
-//app.use(express.static('uploads'));
+//app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static('uploads'));
 
 // initialize cookie-parser to allow us access the cookies stored in the browser. 
-//app.use(cookieParser());
+app.use(cookieParser());
 
 // initialize express-session to allow us track the logged-in user across sessions.
-console.log('secret = '+uuidv4())
-/*app.use(session({
-    secret: uuidv4(),
-    resave: false,
-    saveUninitialized: true
-}));*/
-var sec = uuidv4()
 app.use(session({
-    secret: sec,
+    key: 'user_sid',
+    secret: 'somerandonstuffs',
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: 600000
+    }
 }));
-////////////handlebars register
-
 
 //templating engine
-const handlebars = exphbs.create({ extname: '.hbs', 
-    helpers:{
-        substr: function(len, context) {
-            if ( context.length > len ) {
-             return context.substring(0, len) + "...";
-            } else {
-             return context;
-            }
-        }
-    }
-});
+const handlebars = exphbs.create({ extname: '.hbs', });
 app.engine('.hbs', handlebars.engine);
 app.set('view engine', '.hbs');
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
 app.use((req, res, next) => {
-    if (!req.session.user) {
-        req.session.user = {isLoged:false,user:{}}         
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');        
     }
-    console.log("from app.js config")
-    console.log(req.session.user)
     next();
 });
 

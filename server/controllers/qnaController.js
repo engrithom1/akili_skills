@@ -7,7 +7,7 @@ var userInfo = data.userInfo
 ////constroller functions
 exports.singleQna = (req, res) => {
 
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user) {
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
   }
@@ -56,7 +56,7 @@ exports.singleQna = (req, res) => {
   })
 }
 
-exports.accountFeed = (req, res)=>{
+exports.accountQna = (req, res)=>{
   if(req.session.user){
     userInfo.isLoged = req.session.user.isLoged
     userInfo.user = req.session.user.user
@@ -65,12 +65,13 @@ exports.accountFeed = (req, res)=>{
         if (err) throw err; // not connected
         //console.log('Connected!');
   
-        connection.query('SELECT * FROM feeds ORDER BY id DESC', (err, rows) => {
+        connection.query('SELECT qn.question, qn.id, qn.views, qn.answer_by, qn.status, us.username AS askedby FROM question_answers AS qn INNER JOIN users AS us ON qn.ask_by = us.id ORDER BY qn.answer_by ASC', (err, qnas) => {
           // Once done, release connection
           //connection.release();
   
           if (!err) {
-            res.render('account/feed',{userInfo:userInfo,feeds:rows,style:"account.css", title:"Feeds Dashbord Page"})
+            //console.log(qnas)
+            res.render('account/qna',{userInfo:userInfo,qnas,style:"account.css", title:"Question and Answer Dashbord Page"})
           } else {
             console.log(err);
             console.log("errors------------------------------------feed");
@@ -81,18 +82,24 @@ exports.accountFeed = (req, res)=>{
     
 }
 
-exports.getFeedEdit = (req, res)=>{
-    var id = req.body.id
+exports.getQnaEdit = (req, res)=>{
+    
+  var id = req.params.id
+    if(req.session.user){
+      userInfo.isLoged = req.session.user.isLoged
+      userInfo.user = req.session.user.user
+   }
 
     pool.getConnection((err, connection) => {
         if (err) throw err; // not connected
         console.log('Connected!');
   
-        connection.query('SELECT * FROM feeds WHERE id = '+id, (err, rows) => {
+        connection.query("SELECT qn.question, qn.id, qn.views, qn.answer_by, qn.answer, qn.status, us.avator, us.phone_number, us.username AS askedby FROM question_answers AS qn INNER JOIN users AS us ON qn.ask_by = us.id WHERE qn.id = ?",[id], (err, rows) => {
           // Once done, release connection
           //connection.release();
           if (!err) {
-            return res.json(rows);
+            var qna = rows[0]
+            res.render('account/qna_answer',{userInfo:userInfo,qna,style:"account.css", title:"Question and Answer Dashbord Update Page"})
           } else {
             console.log("get feed errors---------------------------------------");  
             console.log(err);
@@ -140,28 +147,24 @@ exports.createQna = (req, res)=>{
     
 }
 
-exports.updateFeed = (req, res)=>{
-    var { title, description, feed_id, status} = req.body;
-    var time = new Date()
-    let imageFile
-    let uploadPath
-
+exports.updateQna = (req, res)=>{
+    var { question, answer, status} = req.body;
+    
     var user_id = req.session.user.user.id;
+    var post_id = req.params.id
 
-    var slug = richFunctions.getSlug(title,feed_id,60)
-
-    if (!req.files || Object.keys(req.files).length === 0) {
+    var slug = richFunctions.getSlug(question,post_id,60)
 
         pool.getConnection((err, connection) => {
             if (err) throw err; // not connected
             //console.log('Connected!');
       
-            connection.query('UPDATE feeds SET title = ?, slug = ?, status = ? , description = ?, created_by = ? WHERE id = ?',[title, slug, status, description, user_id, feed_id], (err, rows) => {
+            connection.query('UPDATE question_answers SET question = ?, slug = ?, status = ? , answer = ?, answer_by = ? WHERE id = ?',[question, slug, status, answer, user_id, post_id], (err, rows) => {
               // Once done, release connection
               //connection.release();
       
               if (!err) {
-                res.redirect('/account/feed');
+                res.redirect('/account/qna');
               } else {
                 console.log("errors---------------------------------------");  
                 console.log(err);
@@ -169,44 +172,6 @@ exports.updateFeed = (req, res)=>{
       
             });
           });
-        //return res.status(400).send('No files were uploaded.');
-    }else{
-
-    imageFile = req.files.thumbnail;
-    var name = imageFile.name
-    var nameArry = name.split(".")
-    var ext = nameArry[nameArry.length - 1]
-    var filename = "feed"+time.getTime() +'.'+ext;
-    //console.log(imageFile)
-    uploadPath = '/skillapp/uploads/images/' + filename;
-
-      // Use mv() to place file on the server
-    imageFile.mv(uploadPath, function (err) {
-    if (err) return res.status(500).send(err);
-
-    pool.getConnection((err, connection) => {
-      if (err) throw err; // not connected
-      console.log('Connected!');
-
-      connection.query('UPDATE feeds SET title = ?, slug = ?, status = ? , description = ?, thumbnail = ?, created_by = ? WHERE id = ?',[title, slug , status, description, filename, user_id, feed_id], (err, rows) => {
-        // Once done, release connection
-        //connection.release();
-
-        if (!err) {
-          res.redirect('/account/feed');
-        } else {
-          console.log("errors---------------------------------------");  
-          console.log(err);
-        }
-
-      });
-    });
-
-    // res.send('File uploaded!');
-  });
-}
-
-    
 }
 
 

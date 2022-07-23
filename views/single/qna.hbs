@@ -171,42 +171,6 @@
 
     });
 
-////get edit post
-    $(document).on('click', '#submit-question', function() {
-
-       
-        const question = $('#question-text').val();
-        const user_id = $('#ask-by').attr('user-id');
-       
-        if(question.length != 0 && user_id != 0){
-
-          $.ajax({
-              url: '/add-question',
-              method: 'POST',
-              data: {
-                  user_id, question
-              }
-          })
-          .then((response) =>{
-           
-            alert(response)
-          })
-          .catch((error) =>{
-              alert(error)
-          });
-          //alert(question+'this'+user_id)
-          
-        }else{
-          if(user_id == 0){
-              alert('please log in to comment')
-          }else{
-             alert('empty comment')
-          }
-          
-        }
-
-    });
-
 </script>
 
 

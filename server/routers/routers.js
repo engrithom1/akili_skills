@@ -7,19 +7,33 @@ const audioController = require('../controllers/audioController')
 const bookController = require('../controllers/bookController')
 const feedController = require('../controllers/feedController')
 const qnaController = require('../controllers/qnaController')
+const paymentController = require('../controllers/paymentController')
 const commentController = require('../controllers/commentController')
 const discussionController = require('../controllers/discussionController')
 const checker = require('../middleware/authMiddleware')
 
+
+///payment controller
+router.get('/payment',checker.authChecker,paymentController.payment)
+router.post('/payment',paymentController.makePayment)
+router.post('/cancel',paymentController.cancelPayment)
+router.post('/success',paymentController.successPayment)
+
 ///qna functions
 router.get('/qna/:slug', qnaController.singleQna)
 router.post('/add-question', qnaController.createQna)
+router.get('/account/qna',checker.authChecker, qnaController.accountQna)
+router.get('/account/qna-edit/:id', qnaController.getQnaEdit)
+router.post('/account/qna-edit/:id', qnaController.updateQna)
 
 ////////comments functions
 router.post('/add-comment', commentController.allInOneComment)
+router.post('/add-reply', commentController.discussionReply)
 router.post('/like-comment', commentController.likeComment)
 
 ///discussions functions
+router.get('/discussion/:slug', discussionController.singleDiscussion)
+
 router.get('/account/discussion',checker.authChecker, discussionController.accountDiscussion)
 router.post('/account/discussion', discussionController.createDiscussion)
 router.post('/get-edit-discussion', discussionController.getDiscussionEdit)
